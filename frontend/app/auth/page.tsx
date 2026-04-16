@@ -121,7 +121,7 @@ export default function AuthPage() {
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Jonathan Whittaker"
+                  placeholder="Full name"
                   className="w-full rounded-lg px-4 py-3 text-sm outline-none transition-colors"
                   style={{background:"var(--bg)", border:"1px solid var(--border-light)", color:"var(--text)"}}
                 />
