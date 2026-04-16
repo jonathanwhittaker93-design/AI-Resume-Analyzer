@@ -81,7 +81,7 @@ export default function DashboardPage() {
         </div>
 
         <h1 className="font-display font-light mb-8" style={{fontSize:"2.75rem", color:"#ede8df"}}>
-          Your analyses
+          Your Analyses
         </h1>
 
         {loading ? (
