@@ -2,6 +2,8 @@
 
 An AI-powered resume analysis tool that scores your resume against any job description and gives you actionable feedback to improve your chances.
 
+**Live demo: https://ai-resume-analyzer-gold-zeta.vercel.app**
+
 ![App Preview](Images/Frontpage.png)
 
 ## Features
