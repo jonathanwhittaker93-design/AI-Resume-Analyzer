@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import type { AxiosResponse } from "axios";
 import { getMe } from "@/lib/api";
 
 interface User {
@@ -29,7 +30,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(() =>
     typeof window !== "undefined" ? localStorage.getItem("token") : null
   );
-  // loading starts true only if there's a token to validate
   const [loading, setLoading] = useState<boolean>(() =>
     typeof window !== "undefined" ? !!localStorage.getItem("token") : false
   );
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!token) return;
     getMe()
-      .then((res) => setUser(res.data))
+      .then((res: AxiosResponse<User>) => setUser(res.data))
       .catch(() => {
         localStorage.removeItem("token");
         setToken(null);
@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = (newToken: string) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
-    getMe().then((res) => setUser(res.data));
+    getMe().then((res: AxiosResponse<User>) => setUser(res.data));
   };
 
   const logout = () => {
