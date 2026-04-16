@@ -49,18 +49,20 @@ export default function AnalyzePage() {
   const canSubmit = !loading && !!file && !!jobDescription;
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)", padding: "2.5rem 1.5rem" }}>
-      <div style={{ maxWidth: "680px", margin: "0 auto" }}>
+    <main className="min-h-screen py-10 px-6" style={{background:"var(--bg)"}}>
+      <div className="max-w-2xl mx-auto">
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "3rem" }}>
+        {/* Nav */}
+        <div className="flex items-center justify-between mb-12">
           <div>
-            <span className="font-display" style={{ fontSize: "1.4rem", color: "var(--gold)" }}>Resumé</span>
-            <p style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginTop: "0.25rem" }}>{user?.email}</p>
+            <span className="font-display text-xl" style={{color:"var(--gold)"}}>Resumé</span>
+            <p className="text-xs mt-1" style={{color:"var(--text-dim)"}}>{user?.email}</p>
           </div>
-          <div style={{ display: "flex", gap: "0.75rem" }}>
+          <div className="flex gap-3">
             <button
               onClick={() => router.push("/dashboard")}
-              style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500, fontFamily: "DM Sans, sans-serif" }}
+              className="text-sm px-5 py-2 rounded-lg font-medium cursor-pointer transition-colors"
+              style={{background:"var(--gold)", color:"#0a0808", border:"none"}}
               onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-light)")}
               onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}
             >
@@ -68,7 +70,8 @@ export default function AnalyzePage() {
             </button>
             <button
               onClick={() => { logout(); router.push("/auth"); }}
-              style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "transparent", color: "var(--text-dim)", border: "1px solid var(--border)", borderRadius: "8px", cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}
+              className="text-sm px-5 py-2 rounded-lg cursor-pointer transition-colors"
+              style={{background:"transparent", color:"var(--text-dim)", border:"1px solid var(--border)"}}
               onMouseEnter={e => (e.currentTarget.style.color = "var(--text-muted)")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--text-dim)")}
             >
@@ -77,64 +80,88 @@ export default function AnalyzePage() {
           </div>
         </div>
 
-        <h1 className="font-display" style={{ fontSize: "2.75rem", fontWeight: 300, color: "var(--text)", marginBottom: "0.5rem" }}>New Analysis</h1>
-        <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", marginBottom: "2.5rem", fontWeight: 300 }}>
+        <h1 className="font-display font-light mb-2" style={{fontSize:"2.75rem", color:"var(--text)"}}>
+          New Analysis
+        </h1>
+        <p className="text-sm font-light mb-10" style={{color:"var(--text-muted)"}}>
           Upload your resume and paste a job description to get your score.
         </p>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ background: "var(--surface)", border: `1px solid ${dragOver ? "var(--gold)" : file ? "rgba(200,169,110,0.4)" : "var(--border)"}`, borderRadius: "16px", marginBottom: "1rem", overflow: "hidden" }}>
-            <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--border)" }}>
-              <p style={{ fontSize: "0.65rem", color: "var(--gold)", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500 }}>Resume</p>
+
+          {/* Upload */}
+          <div
+            className="rounded-2xl mb-4 overflow-hidden"
+            style={{
+              background:"var(--surface)",
+              border:`1px solid ${dragOver ? "var(--gold)" : file ? "rgba(200,169,110,0.4)" : "var(--border)"}`
+            }}
+          >
+            <div className="px-7 py-5" style={{borderBottom:"1px solid var(--border)"}}>
+              <p className="text-xs font-medium tracking-widest uppercase" style={{color:"var(--gold)"}}>Resume</p>
             </div>
             <div
-              style={{ padding: "2.5rem 1.75rem", textAlign: "center", cursor: "pointer" }}
+              className="px-7 py-10 text-center cursor-pointer"
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
               onClick={() => document.getElementById("resume-upload")?.click()}
             >
-              <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files?.[0] || null)} style={{ display: "none" }} id="resume-upload" />
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                className="hidden"
+                id="resume-upload"
+              />
               {file ? (
                 <div>
-                  <p style={{ fontSize: "0.925rem", color: "var(--gold)", fontWeight: 400, marginBottom: "0.25rem" }}>{file.name}</p>
-                  <p style={{ fontSize: "0.75rem", color: "var(--text-dim)" }}>{(file.size / 1024 / 1024).toFixed(2)} MB — click to change</p>
+                  <p className="text-sm font-normal mb-1" style={{color:"var(--gold)"}}>{file.name}</p>
+                  <p className="text-xs" style={{color:"var(--text-dim)"}}>{(file.size / 1024 / 1024).toFixed(2)} MB — click to change</p>
                 </div>
               ) : (
                 <div>
-                  <p style={{ fontSize: "0.925rem", color: "var(--text-muted)", marginBottom: "0.35rem", fontWeight: 300 }}>Drop your PDF here</p>
-                  <p style={{ fontSize: "0.75rem", color: "var(--text-dim)" }}>or click to browse maximum file size 5MB</p>
+                  <p className="text-sm font-light mb-1" style={{color:"var(--text-muted)"}}>Drop your PDF here</p>
+                  <p className="text-xs" style={{color:"var(--text-dim)"}}>or click to browse maximum file size 5MB</p>
                 </div>
               )}
             </div>
           </div>
 
-          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "16px", marginBottom: "1.5rem", overflow: "hidden" }}>
-            <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--border)" }}>
-              <p style={{ fontSize: "0.65rem", color: "var(--gold)", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500 }}>Job Description</p>
+          {/* Job Description */}
+          <div className="rounded-2xl mb-6 overflow-hidden" style={{background:"var(--surface)", border:"1px solid var(--border)"}}>
+            <div className="px-7 py-5" style={{borderBottom:"1px solid var(--border)"}}>
+              <p className="text-xs font-medium tracking-widest uppercase" style={{color:"var(--gold)"}}>Job Description</p>
             </div>
-            <div style={{ padding: "1.5rem 1.75rem" }}>
+            <div className="px-7 py-6">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
                 required
                 rows={10}
-                style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: "var(--text-muted)", fontSize: "0.875rem", lineHeight: 1.75, fontFamily: "DM Sans, sans-serif", fontWeight: 300, resize: "none" }}
+                className="w-full text-sm font-light resize-none outline-none"
+                style={{background:"transparent", border:"none", color:"var(--text-muted)", lineHeight:1.75}}
                 placeholder="Paste the full job description here..."
               />
             </div>
           </div>
 
           {error && (
-            <div style={{ marginBottom: "1rem", padding: "0.875rem 1.25rem", background: "var(--red-dim)", borderRadius: "10px" }}>
-              <p style={{ fontSize: "0.825rem", color: "var(--red)" }}>{error}</p>
+            <div className="mb-4 px-5 py-3.5 rounded-xl" style={{background:"var(--red-dim)"}}>
+              <p className="text-sm" style={{color:"var(--red)"}}>{error}</p>
             </div>
           )}
 
           <button
             type="submit"
             disabled={!canSubmit}
-            style={{ width: "100%", padding: "1rem", background: canSubmit ? "var(--gold)" : "var(--border-light)", color: canSubmit ? "#0a0808" : "var(--text-dim)", border: "none", borderRadius: "12px", fontSize: "0.875rem", fontWeight: 500, cursor: canSubmit ? "pointer" : "not-allowed", fontFamily: "DM Sans, sans-serif", letterSpacing: "0.02em", transition: "background 0.2s" }}
+            className="w-full py-4 rounded-xl text-sm font-medium tracking-wide transition-colors"
+            style={{
+              background: canSubmit ? "var(--gold)" : "var(--border-light)",
+              color: canSubmit ? "#0a0808" : "var(--text-dim)",
+              border:"none",
+              cursor: canSubmit ? "pointer" : "not-allowed"
+            }}
             onMouseEnter={e => { if (canSubmit) e.currentTarget.style.background = "var(--gold-light)"; }}
             onMouseLeave={e => { if (canSubmit) e.currentTarget.style.background = "var(--gold)"; }}
           >
