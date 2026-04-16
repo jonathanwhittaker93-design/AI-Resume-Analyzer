@@ -13,6 +13,19 @@ interface Analysis {
   summary: string;
 }
 
+function SkeletonCard() {
+  return (
+    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1.25rem 1.5rem", display: "flex", alignItems: "center", gap: "1.25rem" }}>
+      <div style={{ width: "52px", height: "52px", borderRadius: "10px", flexShrink: 0, background: "var(--border)", animation: "pulse 1.5s ease-in-out infinite" }} />
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+        <div style={{ height: "14px", borderRadius: "6px", background: "var(--border)", width: "55%", animation: "pulse 1.5s ease-in-out infinite" }} />
+        <div style={{ height: "12px", borderRadius: "6px", background: "var(--border)", width: "80%", animation: "pulse 1.5s ease-in-out infinite animationDelay: 0.1s" }} />
+        <div style={{ height: "11px", borderRadius: "6px", background: "var(--border)", width: "30%", animation: "pulse 1.5s ease-in-out infinite" }} />
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +50,12 @@ export default function DashboardPage() {
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", padding: "2.5rem 1.5rem" }}>
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      `}</style>
       <div style={{ maxWidth: "680px", margin: "0 auto" }}>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "3rem" }}>
@@ -65,7 +84,9 @@ export default function DashboardPage() {
         </h1>
 
         {loading ? (
-          <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>Loading...</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
+          </div>
         ) : analyses.length === 0 ? (
           <div style={{ background: "var(--surface)", border: "1px dashed var(--border-light)", borderRadius: "16px", padding: "4rem", textAlign: "center" }}>
             <p className="font-display" style={{ fontSize: "1.75rem", color: "var(--text-muted)", fontWeight: 300, marginBottom: "0.5rem" }}>Nothing here yet</p>
@@ -83,7 +104,9 @@ export default function DashboardPage() {
               <div
                 key={analysis.id}
                 onClick={() => router.push(`/results/${analysis.id}`)}
-                style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1.25rem 1.5rem", display: "flex", alignItems: "center", gap: "1.25rem", cursor: "pointer" }}
+                style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1.25rem 1.5rem", display: "flex", alignItems: "center", gap: "1.25rem", cursor: "pointer", transition: "border-color 0.15s" }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(200,169,110,0.3)")}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = "var(--border)")}
               >
                 <div style={{ width: "52px", height: "52px", borderRadius: "10px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: `${scoreColor(analysis.match_score)}15`, border: `1px solid ${scoreColor(analysis.match_score)}40` }}>
                   <span className="font-display" style={{ fontSize: "1.25rem", color: scoreColor(analysis.match_score), fontWeight: 300 }}>
