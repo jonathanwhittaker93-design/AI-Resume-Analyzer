@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { login as loginApi, signup as signupApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/error";
@@ -17,6 +17,16 @@ export default function AuthPage() {
   const [confirmedEmail, setConfirmedEmail] = useState("");
   const { login } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const confirmed = searchParams.get("confirmed");
+    const emailParam = searchParams.get("email");
+    if (confirmed === "true" && emailParam) {
+      setAwaitingConfirmation(true);
+      setConfirmedEmail(decodeURIComponent(emailParam));
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +40,7 @@ export default function AuthPage() {
       } else {
         const res = await signupApi(email, password, fullName);
         if (res.data.requires_confirmation) {
-          setConfirmedEmail(email);
-          setAwaitingConfirmation(true);
+          router.replace(`/auth?confirmed=true&email=${encodeURIComponent(email)}`);
         } else {
           login(res.data.access_token);
           router.push("/dashboard");
@@ -73,7 +82,7 @@ export default function AuthPage() {
           </div>
 
           <button
-            onClick={() => { setAwaitingConfirmation(false); setIsLogin(true); setEmail(confirmedEmail); setPassword(""); }}
+            onClick={() => router.replace("/auth")}
             style={{ marginTop: "1.5rem", background: "none", border: "none", color: "var(--gold)", cursor: "pointer", fontSize: "0.875rem" }}
           >
             Back to sign in
