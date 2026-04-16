@@ -15,12 +15,12 @@ interface Analysis {
 
 function SkeletonCard() {
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-6 py-5 flex items-center gap-5">
-      <div className="w-13 h-13 rounded-xl bg-zinc-800 animate-pulse shrink-0" />
+    <div className="bg-[#0f0f1a] border border-[#1e1e30] rounded-xl p-5 flex items-center gap-5">
+      <div className="shrink-0 rounded-lg bg-[#1e1e30] animate-pulse" style={{width:"52px",height:"52px"}} />
       <div className="flex-1 flex flex-col gap-2">
-        <div className="h-3.5 rounded bg-zinc-800 animate-pulse w-1/2" />
-        <div className="h-3 rounded bg-zinc-800 animate-pulse w-4/5" />
-        <div className="h-2.5 rounded bg-zinc-800 animate-pulse w-1/4" />
+        <div className="h-3 rounded bg-[#1e1e30] animate-pulse w-1/2" />
+        <div className="h-2.5 rounded bg-[#1e1e30] animate-pulse w-4/5" />
+        <div className="h-2 rounded bg-[#1e1e30] animate-pulse w-1/4" />
       </div>
     </div>
   );
@@ -45,39 +45,42 @@ export default function DashboardPage() {
     setAnalyses(analyses.filter((a) => a.id !== id));
   };
 
-  const scoreColor = (score: number) =>
+  const scoreStyles = (score: number) =>
     score >= 70
-      ? { text: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/30" }
+      ? { color: "#4caf88", bg: "rgba(76,175,136,0.12)", border: "1px solid rgba(76,175,136,0.3)" }
       : score >= 40
-      ? { text: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/30" }
-      : { text: "text-red-400", bg: "bg-red-400/10", border: "border-red-400/30" };
+      ? { color: "#d4a853", bg: "rgba(212,168,83,0.12)", border: "1px solid rgba(212,168,83,0.3)" }
+      : { color: "#e07070", bg: "rgba(224,112,112,0.12)", border: "1px solid rgba(224,112,112,0.3)" };
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-6 py-10">
+    <main className="min-h-screen bg-[#08080f] py-10 px-6">
       <div className="max-w-2xl mx-auto">
 
+        {/* Nav */}
         <div className="flex items-center justify-between mb-12">
           <div>
-            <span className="font-display text-xl text-gold">Resumé</span>
-            <p className="text-xs text-zinc-500 mt-1">{user?.email}</p>
+            <span className="font-display text-xl" style={{color:"#c8a96e"}}>Resumé</span>
+            <p className="text-xs mt-1" style={{color:"#4a4a64"}}>{user?.email}</p>
           </div>
           <div className="flex gap-3">
             <button
               onClick={() => router.push("/analyze")}
-              className="text-sm px-5 py-2 bg-gold text-zinc-950 rounded-lg font-medium cursor-pointer hover:bg-gold-light transition-colors"
+              className="text-sm px-5 py-2 rounded-lg font-medium cursor-pointer transition-colors"
+              style={{background:"#c8a96e", color:"#0a0808"}}
             >
               New analysis
             </button>
             <button
               onClick={() => { logout(); router.push("/auth"); }}
-              className="text-sm px-5 py-2 bg-transparent text-zinc-500 border border-zinc-800 rounded-lg cursor-pointer hover:border-zinc-600 hover:text-stone-400 transition-colors"
+              className="text-sm px-5 py-2 rounded-lg cursor-pointer transition-colors"
+              style={{background:"transparent", color:"#4a4a64", border:"1px solid #1e1e30"}}
             >
               Sign out
             </button>
           </div>
         </div>
 
-        <h1 className="font-display text-5xl font-light text-stone-200 mb-8">
+        <h1 className="font-display font-light mb-8" style={{fontSize:"2.75rem", color:"#ede8df"}}>
           Your analyses
         </h1>
 
@@ -86,12 +89,13 @@ export default function DashboardPage() {
             {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : analyses.length === 0 ? (
-          <div className="bg-zinc-900 border border-dashed border-zinc-700 rounded-2xl p-16 text-center">
-            <p className="font-display text-3xl text-stone-400 font-light mb-2">Nothing here yet</p>
-            <p className="text-sm text-zinc-500 mb-6">Upload your first resume to get started.</p>
+          <div className="rounded-2xl p-16 text-center" style={{background:"#0f0f1a", border:"1px dashed #2a2a40"}}>
+            <p className="font-display text-3xl font-light mb-2" style={{color:"#7a7a96"}}>Nothing here yet</p>
+            <p className="text-sm mb-6" style={{color:"#4a4a64"}}>Upload your first resume to get started.</p>
             <button
               onClick={() => router.push("/analyze")}
-              className="text-sm px-6 py-3 bg-gold text-zinc-950 rounded-lg font-medium cursor-pointer hover:bg-gold-light transition-colors"
+              className="text-sm px-6 py-3 rounded-lg font-medium cursor-pointer"
+              style={{background:"#c8a96e", color:"#0a0808"}}
             >
               Analyze a resume
             </button>
@@ -99,35 +103,38 @@ export default function DashboardPage() {
         ) : (
           <div className="flex flex-col gap-3">
             {analyses.map((analysis) => {
-              const colors = scoreColor(analysis.match_score);
+              const s = scoreStyles(analysis.match_score);
               return (
                 <div
                   key={analysis.id}
                   onClick={() => router.push(`/results/${analysis.id}`)}
-                  className="bg-zinc-900 border border-zinc-800 rounded-xl px-6 py-5 flex items-center gap-5 cursor-pointer hover:border-gold/30 transition-colors"
+                  className="rounded-xl p-5 flex items-center gap-5 cursor-pointer transition-colors"
+                  style={{background:"#0f0f1a", border:"1px solid #1e1e30"}}
                 >
-                  <div className={`w-13 h-13 rounded-xl shrink-0 flex items-center justify-center ${colors.bg} border ${colors.border}`}
-                    style={{ width: "52px", height: "52px" }}>
-                    <span className={`font-display text-xl font-light ${colors.text}`}>
+                  <div className="shrink-0 flex items-center justify-center" style={{width:"52px"}}>
+                    <span className="font-display font-light" style={{fontSize:"1.75rem", color:s.color}}>
                       {analysis.match_score}
                     </span>
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-stone-200 truncate">
+                    <p className="text-sm font-medium truncate" style={{color:"#ede8df"}}>
                       {analysis.resume_filename}
                     </p>
-                    <p className="text-xs text-zinc-500 mt-0.5 truncate">
+                    <p className="text-xs mt-0.5 truncate" style={{color:"#4a4a64"}}>
                       {analysis.summary?.slice(0, 80)}...
                     </p>
-                    <p className="text-xs text-zinc-600 mt-1">
+                    <p className="text-xs mt-1" style={{color:"#4a4a64"}}>
                       {new Date(analysis.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                     </p>
                   </div>
 
                   <button
                     onClick={(e) => handleDelete(analysis.id, e)}
-                    className="text-xs px-3 py-1.5 bg-transparent text-zinc-600 border border-transparent rounded-md cursor-pointer shrink-0 hover:text-red-400 hover:bg-red-950/50 hover:border-red-900/50 transition-colors"
+                    className="text-xs px-3 py-1.5 rounded-md cursor-pointer shrink-0 transition-colors"
+                    style={{background:"transparent", color:"#4a4a64", border:"1px solid transparent"}}
+                    onMouseEnter={e => { e.currentTarget.style.color = "#e07070"; e.currentTarget.style.background = "rgba(224,112,112,0.12)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = "#4a4a64"; e.currentTarget.style.background = "transparent"; }}
                   >
                     Delete
                   </button>
