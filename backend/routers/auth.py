@@ -6,7 +6,7 @@ from utils.auth import create_access_token, get_current_user
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/signup", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
 def signup(body: SignUpRequest):
     try:
         response = supabase.auth.sign_up({
@@ -20,13 +20,13 @@ def signup(body: SignUpRequest):
         if response.user is None:
             raise HTTPException(status_code=400, detail="Signup failed. Email may already be in use.")
 
-        token = create_access_token({"sub": response.user.id, "email": response.user.email})
+        # Email confirmation required — no session yet
+        if response.session is None:
+            return {"requires_confirmation": True, "email": body.email}
 
-        return TokenResponse(
-            access_token=token,
-            user_id=response.user.id,
-            email=response.user.email
-        )
+        # Email confirmation disabled — log straight in
+        token = create_access_token({"sub": response.user.id, "email": response.user.email})
+        return {"requires_confirmation": False, "access_token": token, "user_id": response.user.id, "email": response.user.email}
 
     except HTTPException:
         raise

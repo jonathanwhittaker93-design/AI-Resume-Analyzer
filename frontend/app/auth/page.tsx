@@ -13,6 +13,8 @@ export default function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
+  const [confirmedEmail, setConfirmedEmail] = useState("");
   const { login } = useAuth();
   const router = useRouter();
 
@@ -21,17 +23,65 @@ export default function AuthPage() {
     setError("");
     setLoading(true);
     try {
-      const res = isLogin
-        ? await loginApi(email, password)
-        : await signupApi(email, password, fullName);
-      login(res.data.access_token);
-      router.push("/dashboard");
+      if (isLogin) {
+        const res = await loginApi(email, password);
+        login(res.data.access_token);
+        router.push("/dashboard");
+      } else {
+        const res = await signupApi(email, password, fullName);
+        if (res.data.requires_confirmation) {
+          setConfirmedEmail(email);
+          setAwaitingConfirmation(true);
+        } else {
+          login(res.data.access_token);
+          router.push("/dashboard");
+        }
+      }
     } catch (err: unknown) {
       setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
   };
+
+  if (awaitingConfirmation) {
+    return (
+      <main style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+        <div style={{ width: "100%", maxWidth: "400px", textAlign: "center" }}>
+          <span className="font-display" style={{ fontSize: "1.75rem", color: "var(--gold)" }}>Resumé</span>
+
+          <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "16px", padding: "2.5rem 2rem", marginTop: "2rem" }}>
+            <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "rgba(200,169,110,0.1)", border: "1px solid rgba(200,169,110,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem" }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+            </div>
+
+            <h2 className="font-display" style={{ fontSize: "1.5rem", fontWeight: 300, color: "var(--text)", marginBottom: "0.75rem" }}>
+              Check your email
+            </h2>
+            <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "0.5rem" }}>
+              We sent a confirmation link to
+            </p>
+            <p style={{ fontSize: "0.875rem", color: "var(--gold)", marginBottom: "1.5rem", fontWeight: 500 }}>
+              {confirmedEmail}
+            </p>
+            <p style={{ fontSize: "0.8rem", color: "var(--text-dim)", lineHeight: 1.6 }}>
+              Click the link in the email to activate your account, then come back here to sign in.
+            </p>
+          </div>
+
+          <button
+            onClick={() => { setAwaitingConfirmation(false); setIsLogin(true); setEmail(confirmedEmail); setPassword(""); }}
+            style={{ marginTop: "1.5rem", background: "none", border: "none", color: "var(--gold)", cursor: "pointer", fontSize: "0.875rem" }}
+          >
+            Back to sign in
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
