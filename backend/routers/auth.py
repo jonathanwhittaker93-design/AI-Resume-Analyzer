@@ -55,7 +55,7 @@ def login(body: LoginRequest):
 
     except HTTPException:
         raise
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=401, detail="Invalid email or password.")
 
 
