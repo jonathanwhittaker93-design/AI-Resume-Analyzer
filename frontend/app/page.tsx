@@ -1,9 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomePage() {
   const router = useRouter();
+  const { token, loading, user } = useAuth();
+
+  useEffect(() => {
+    // No redirect here authenticated users can still see the landing page
+    // but get the personalised nav
+  }, []);
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}>
@@ -12,20 +20,41 @@ export default function HomePage() {
         <span className="font-display" style={{ fontSize: "1.4rem", color: "var(--gold)", letterSpacing: "0.05em" }}>
           Resumé
         </span>
-        <div style={{ display: "flex", gap: "0.75rem" }}>
-          <button
-            onClick={() => router.push("/auth")}
-            style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "8px", cursor: "pointer" }}
-          >
-            Sign in
-          </button>
-          <button
-            onClick={() => router.push("/auth")}
-            style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500 }}
-          >
-            Get started
-          </button>
-        </div>
+
+        {!loading && (
+          token ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <p style={{ fontSize: "0.75rem", color: "var(--text-dim)" }}>{user?.email}</p>
+              <button
+                onClick={() => router.push("/dashboard")}
+                style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "8px", cursor: "pointer" }}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => router.push("/analyze")}
+                style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500 }}
+              >
+                New analysis
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", gap: "0.75rem" }}>
+              <button
+                onClick={() => router.push("/auth")}
+                style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "8px", cursor: "pointer" }}
+              >
+                Sign in
+              </button>
+              <button
+                onClick={() => router.push("/auth")}
+                style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500 }}
+              >
+                Get started
+              </button>
+            </div>
+          )
+        )}
       </nav>
 
       {/* Hero */}
@@ -45,17 +74,19 @@ export default function HomePage() {
 
         <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
           <button
-            onClick={() => router.push("/auth")}
+            onClick={() => router.push(token ? "/analyze" : "/auth")}
             style={{ fontSize: "0.9rem", padding: "0.875rem 2rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "10px", cursor: "pointer", fontWeight: 500 }}
           >
-            Analyze my resume
+            {token ? "New analysis" : "Analyze my resume"}
           </button>
-          <button
-            onClick={() => router.push("/auth")}
-            style={{ fontSize: "0.9rem", padding: "0.875rem 2rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "10px", cursor: "pointer" }}
-          >
-            Sign in
-          </button>
+          {!token && (
+            <button
+              onClick={() => router.push("/auth")}
+              style={{ fontSize: "0.9rem", padding: "0.875rem 2rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "10px", cursor: "pointer" }}
+            >
+              Sign in
+            </button>
+          )}
         </div>
 
         {/* Stats */}

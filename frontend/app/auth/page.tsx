@@ -15,7 +15,11 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
   const [confirmedEmail, setConfirmedEmail] = useState("");
-  const { login } = useAuth();
+  const { login, token, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && token) router.replace("/dashboard");
+  }, [token, authLoading, router]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
