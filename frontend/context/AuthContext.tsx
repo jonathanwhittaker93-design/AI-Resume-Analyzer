@@ -29,20 +29,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(() =>
     typeof window !== "undefined" ? localStorage.getItem("token") : null
   );
-  const [loading, setLoading] = useState(true);
+  // loading starts true only if there's a token to validate
+  const [loading, setLoading] = useState<boolean>(() =>
+    typeof window !== "undefined" ? !!localStorage.getItem("token") : false
+  );
 
   useEffect(() => {
-    if (token) {
-      getMe()
-        .then((res) => setUser(res.data))
-        .catch(() => {
-          localStorage.removeItem("token");
-          setToken(null);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+    if (!token) return;
+    getMe()
+      .then((res) => setUser(res.data))
+      .catch(() => {
+        localStorage.removeItem("token");
+        setToken(null);
+      })
+      .finally(() => setLoading(false));
   }, [token]);
 
   const login = (newToken: string) => {

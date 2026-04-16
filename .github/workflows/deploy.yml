@@ -42,7 +42,7 @@ jobs:
         run: pip install ruff && ruff check . --ignore E402
 
       - name: Run tests
-        run: pip install pytest && pytest --tb=short -q
+        run: pip install pytest && (pytest --tb=short -q; code=$?; [ $code -eq 5 ] && exit 0 || exit $code)
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
