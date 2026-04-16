@@ -8,35 +8,35 @@ export default function HomePage() {
   const { token, loading, user } = useAuth();
 
   const renderNav = () => {
-    if (loading) return <div style={{ width: "180px", height: "34px" }} />;
+    if (loading) return <div className="w-44 h-9" />;
     if (token) return (
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-        <p style={{ fontSize: "0.75rem", color: "var(--text-dim)" }}>{user?.email}</p>
+      <div className="flex items-center gap-3">
+        <p className="text-xs text-zinc-500">{user?.email}</p>
         <button
           onClick={() => router.push("/dashboard")}
-          style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "8px", cursor: "pointer" }}
+          className="text-sm px-5 py-2 bg-transparent text-stone-400 border border-zinc-700 rounded-lg cursor-pointer hover:border-zinc-500 hover:text-stone-300 transition-colors"
         >
           Dashboard
         </button>
         <button
           onClick={() => router.push("/analyze")}
-          style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500 }}
+          className="text-sm px-5 py-2 bg-amber-600 text-zinc-950 border-none rounded-lg cursor-pointer font-medium hover:bg-amber-500 transition-colors"
         >
           New analysis
         </button>
       </div>
     );
     return (
-      <div style={{ display: "flex", gap: "0.75rem" }}>
+      <div className="flex gap-3">
         <button
           onClick={() => router.push("/auth")}
-          style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "8px", cursor: "pointer" }}
+          className="text-sm px-5 py-2 bg-transparent text-stone-400 border border-zinc-700 rounded-lg cursor-pointer hover:border-zinc-500 hover:text-stone-300 transition-colors"
         >
           Sign in
         </button>
         <button
           onClick={() => router.push("/auth")}
-          style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500 }}
+          className="text-sm px-5 py-2 bg-amber-600 text-zinc-950 border-none rounded-lg cursor-pointer font-medium hover:bg-amber-500 transition-colors"
         >
           Get started
         </button>
@@ -45,40 +45,40 @@ export default function HomePage() {
   };
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}>
-      <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.5rem 2.5rem" }}>
-        <span className="font-display" style={{ fontSize: "1.4rem", color: "var(--gold)", letterSpacing: "0.05em" }}>
+    <main className="min-h-screen bg-zinc-950 flex flex-col">
+      <nav className="flex items-center justify-between px-10 py-6">
+        <span className="font-display text-xl text-amber-600 tracking-wide">
           Resumé
         </span>
         {renderNav()}
       </nav>
 
-      <section style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 1.5rem 6rem" }}>
-        <p style={{ fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "2rem" }}>
+      <section className="flex-1 flex flex-col items-center justify-center text-center px-6 pb-24">
+        <p className="text-xs tracking-widest uppercase text-amber-600 mb-8">
           Powered by Claude AI
         </p>
 
-        <h1 className="font-display" style={{ fontSize: "clamp(3.5rem, 8vw, 6.5rem)", lineHeight: 1.05, color: "var(--text)", fontWeight: 300, marginBottom: "1.5rem" }}>
+        <h1 className="font-display text-6xl md:text-7xl lg:text-8xl leading-tight text-stone-200 font-light mb-6">
           Your resume,<br />
-          <em style={{ color: "var(--gold)", fontStyle: "italic" }}>perfected.</em>
+          <em className="text-amber-600 italic">perfected.</em>
         </h1>
 
-        <p style={{ fontSize: "1.05rem", color: "var(--text-muted)", fontWeight: 300, maxWidth: "480px", lineHeight: 1.7, marginBottom: "2.5rem" }}>
+        <p className="text-lg text-stone-400 font-light max-w-lg leading-relaxed mb-10">
           Upload your resume, paste a job description, and receive a precise match score with tailored feedback in seconds.
         </p>
 
         {!loading && (
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
+          <div className="flex gap-3 justify-center">
             <button
               onClick={() => router.push(token ? "/analyze" : "/auth")}
-              style={{ fontSize: "0.9rem", padding: "0.875rem 2rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "10px", cursor: "pointer", fontWeight: 500 }}
+              className="text-sm px-8 py-3.5 bg-amber-600 text-zinc-950 border-none rounded-xl cursor-pointer font-medium hover:bg-amber-500 transition-colors"
             >
               {token ? "New analysis" : "Analyze my resume"}
             </button>
             {!token && (
               <button
                 onClick={() => router.push("/auth")}
-                style={{ fontSize: "0.9rem", padding: "0.875rem 2rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "10px", cursor: "pointer" }}
+                className="text-sm px-8 py-3.5 bg-transparent text-stone-400 border border-zinc-700 rounded-xl cursor-pointer hover:border-zinc-500 hover:text-stone-300 transition-colors"
               >
                 Sign in
               </button>
@@ -86,11 +86,15 @@ export default function HomePage() {
           </div>
         )}
 
-        <div style={{ display: "flex", gap: "4rem", marginTop: "5rem", paddingTop: "2rem", borderTop: "1px solid var(--border)" }}>
-          {[{ value: "0/100", label: "Match score" }, { value: "Instant", label: "Results" }, { value: "Free", label: "To start" }].map((s) => (
-            <div key={s.label} style={{ textAlign: "center" }}>
-              <p className="font-display" style={{ fontSize: "2rem", color: "var(--text)", fontWeight: 300 }}>{s.value}</p>
-              <p style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginTop: "0.25rem" }}>{s.label}</p>
+        <div className="flex gap-16 mt-20 pt-8 border-t border-zinc-800">
+          {[
+            { value: "0/100", label: "Match score" },
+            { value: "Instant", label: "Results" },
+            { value: "Free", label: "To start" },
+          ].map((s) => (
+            <div key={s.label} className="text-center">
+              <p className="font-display text-3xl text-stone-200 font-light">{s.value}</p>
+              <p className="text-xs text-zinc-500 mt-1">{s.label}</p>
             </div>
           ))}
         </div>
