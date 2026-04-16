@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { login as loginApi, signup as signupApi } from "@/lib/api";
+import { getErrorMessage } from "@/lib/error";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,8 +27,7 @@ export default function AuthPage() {
       login(res.data.access_token);
       router.push("/dashboard");
     } catch (err: unknown) {
-      const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      setError(detail || "Something went wrong.");
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -55,9 +55,7 @@ export default function AuthPage() {
 
             {!isLogin && (
               <div style={{ marginBottom: "1.25rem" }}>
-                <label style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>
-                  Full name
-                </label>
+                <label style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>Full name</label>
                 <input
                   type="text"
                   value={fullName}
@@ -69,9 +67,7 @@ export default function AuthPage() {
             )}
 
             <div style={{ marginBottom: "1.25rem" }}>
-              <label style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>
-                Email address
-              </label>
+              <label style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>Email address</label>
               <input
                 type="email"
                 value={email}
@@ -83,9 +79,7 @@ export default function AuthPage() {
             </div>
 
             <div style={{ marginBottom: "1.5rem" }}>
-              <label style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>
-                Password
-              </label>
+              <label style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>Password</label>
               <input
                 type="password"
                 value={password}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { uploadResume, analyzeResume } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import { getErrorMessage } from "@/lib/error";
 
 export default function AnalyzePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -28,8 +29,7 @@ export default function AnalyzePage() {
       const analyzeRes = await analyzeResume(storage_path, filename, jobDescription);
       router.push(`/results/${analyzeRes.data.id}`);
     } catch (err: unknown) {
-      const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      setError(detail || "Something went wrong.");
+      setError(getErrorMessage(err));
       setLoading(false);
       setStep("");
     }
@@ -39,7 +39,11 @@ export default function AnalyzePage() {
     e.preventDefault();
     setDragOver(false);
     const dropped = e.dataTransfer.files[0];
-    if (dropped?.type === "application/pdf") setFile(dropped);
+    if (dropped?.type === "application/pdf") {
+      setFile(dropped);
+    } else {
+      setError("Only PDF files are accepted. Please upload a PDF.");
+    }
   };
 
   const canSubmit = !loading && !!file && !!jobDescription;
@@ -73,15 +77,12 @@ export default function AnalyzePage() {
           </div>
         </div>
 
-        <h1 className="font-display" style={{ fontSize: "2.75rem", fontWeight: 300, color: "var(--text)", marginBottom: "0.5rem" }}>
-          New Analysis
-        </h1>
+        <h1 className="font-display" style={{ fontSize: "2.75rem", fontWeight: 300, color: "var(--text)", marginBottom: "0.5rem" }}>New Analysis</h1>
         <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", marginBottom: "2.5rem", fontWeight: 300 }}>
           Upload your resume and paste a job description to get your score.
         </p>
 
         <form onSubmit={handleSubmit}>
-
           <div style={{ background: "var(--surface)", border: `1px solid ${dragOver ? "var(--gold)" : file ? "rgba(200,169,110,0.4)" : "var(--border)"}`, borderRadius: "16px", marginBottom: "1rem", overflow: "hidden" }}>
             <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--border)" }}>
               <p style={{ fontSize: "0.65rem", color: "var(--gold)", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500 }}>Resume</p>
@@ -102,7 +103,7 @@ export default function AnalyzePage() {
               ) : (
                 <div>
                   <p style={{ fontSize: "0.925rem", color: "var(--text-muted)", marginBottom: "0.35rem", fontWeight: 300 }}>Drop your PDF here</p>
-                  <p style={{ fontSize: "0.75rem", color: "var(--text-dim)" }}>or click to browse — maximum file size 5MB</p>
+                  <p style={{ fontSize: "0.75rem", color: "var(--text-dim)" }}>or click to browse maximum file size 5MB</p>
                 </div>
               )}
             </div>
