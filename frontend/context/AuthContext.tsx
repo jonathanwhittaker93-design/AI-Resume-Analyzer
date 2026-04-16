@@ -27,15 +27,16 @@ const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() =>
-    typeof window !== "undefined" ? localStorage.getItem("token") : null
-  );
-  const [loading, setLoading] = useState<boolean>(() =>
-    typeof window !== "undefined" ? !!localStorage.getItem("token") : false
-  );
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!token) return;
+    const storedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!storedToken) {
+      setLoading(false);
+      return;
+    }
+    setToken(storedToken);
     getMe()
       .then((res: AxiosResponse<User>) => setUser(res.data))
       .catch(() => {
@@ -43,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(null);
       })
       .finally(() => setLoading(false));
-  }, [token]);
+  }, []);
 
   const login = (newToken: string) => {
     localStorage.setItem("token", newToken);
