@@ -15,12 +15,12 @@ interface Analysis {
 
 function SkeletonCard() {
   return (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1.25rem 1.5rem", display: "flex", alignItems: "center", gap: "1.25rem" }}>
-      <div style={{ width: "52px", height: "52px", borderRadius: "10px", flexShrink: 0, background: "var(--border)", animation: "pulse 1.5s ease-in-out infinite" }} />
-      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-        <div style={{ height: "14px", borderRadius: "6px", background: "var(--border)", width: "55%", animation: "pulse 1.5s ease-in-out infinite" }} />
-        <div style={{ height: "12px", borderRadius: "6px", background: "var(--border)", width: "80%", animation: "pulse 1.5s ease-in-out infinite animationDelay: 0.1s" }} />
-        <div style={{ height: "11px", borderRadius: "6px", background: "var(--border)", width: "30%", animation: "pulse 1.5s ease-in-out infinite" }} />
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-6 py-5 flex items-center gap-5">
+      <div className="w-13 h-13 rounded-xl bg-zinc-800 animate-pulse shrink-0" />
+      <div className="flex-1 flex flex-col gap-2">
+        <div className="h-3.5 rounded bg-zinc-800 animate-pulse w-1/2" />
+        <div className="h-3 rounded bg-zinc-800 animate-pulse w-4/5" />
+        <div className="h-2.5 rounded bg-zinc-800 animate-pulse w-1/4" />
       </div>
     </div>
   );
@@ -46,96 +46,94 @@ export default function DashboardPage() {
   };
 
   const scoreColor = (score: number) =>
-    score >= 70 ? "var(--green)" : score >= 40 ? "var(--yellow)" : "var(--red)";
+    score >= 70
+      ? { text: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/30" }
+      : score >= 40
+      ? { text: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/30" }
+      : { text: "text-red-400", bg: "bg-red-400/10", border: "border-red-400/30" };
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)", padding: "2.5rem 1.5rem" }}>
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-      `}</style>
-      <div style={{ maxWidth: "680px", margin: "0 auto" }}>
+    <main className="min-h-screen bg-zinc-950 px-6 py-10">
+      <div className="max-w-2xl mx-auto">
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "3rem" }}>
+        <div className="flex items-center justify-between mb-12">
           <div>
-            <span className="font-display" style={{ fontSize: "1.4rem", color: "var(--gold)" }}>Resumé</span>
-            <p style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginTop: "0.25rem" }}>{user?.email}</p>
+            <span className="font-display text-xl text-gold">Resumé</span>
+            <p className="text-xs text-zinc-500 mt-1">{user?.email}</p>
           </div>
-          <div style={{ display: "flex", gap: "0.75rem" }}>
+          <div className="flex gap-3">
             <button
               onClick={() => router.push("/analyze")}
-              style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500, fontFamily: "DM Sans, sans-serif" }}
+              className="text-sm px-5 py-2 bg-gold text-zinc-950 rounded-lg font-medium cursor-pointer hover:bg-gold-light transition-colors"
             >
               New analysis
             </button>
             <button
               onClick={() => { logout(); router.push("/auth"); }}
-              style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "transparent", color: "var(--text-dim)", border: "1px solid var(--border)", borderRadius: "8px", cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}
+              className="text-sm px-5 py-2 bg-transparent text-zinc-500 border border-zinc-800 rounded-lg cursor-pointer hover:border-zinc-600 hover:text-stone-400 transition-colors"
             >
               Sign out
             </button>
           </div>
         </div>
 
-        <h1 className="font-display" style={{ fontSize: "2.75rem", fontWeight: 300, color: "var(--text)", marginBottom: "2rem" }}>
+        <h1 className="font-display text-5xl font-light text-stone-200 mb-8">
           Your analyses
         </h1>
 
         {loading ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          <div className="flex flex-col gap-3">
             {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : analyses.length === 0 ? (
-          <div style={{ background: "var(--surface)", border: "1px dashed var(--border-light)", borderRadius: "16px", padding: "4rem", textAlign: "center" }}>
-            <p className="font-display" style={{ fontSize: "1.75rem", color: "var(--text-muted)", fontWeight: 300, marginBottom: "0.5rem" }}>Nothing here yet</p>
-            <p style={{ fontSize: "0.875rem", color: "var(--text-dim)", marginBottom: "1.5rem" }}>Upload your first resume to get started.</p>
+          <div className="bg-zinc-900 border border-dashed border-zinc-700 rounded-2xl p-16 text-center">
+            <p className="font-display text-3xl text-stone-400 font-light mb-2">Nothing here yet</p>
+            <p className="text-sm text-zinc-500 mb-6">Upload your first resume to get started.</p>
             <button
               onClick={() => router.push("/analyze")}
-              style={{ fontSize: "0.875rem", padding: "0.75rem 1.5rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500, fontFamily: "DM Sans, sans-serif" }}
+              className="text-sm px-6 py-3 bg-gold text-zinc-950 rounded-lg font-medium cursor-pointer hover:bg-gold-light transition-colors"
             >
               Analyze a resume
             </button>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            {analyses.map((analysis) => (
-              <div
-                key={analysis.id}
-                onClick={() => router.push(`/results/${analysis.id}`)}
-                style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1.25rem 1.5rem", display: "flex", alignItems: "center", gap: "1.25rem", cursor: "pointer", transition: "border-color 0.15s" }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(200,169,110,0.3)")}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = "var(--border)")}
-              >
-                <div style={{ width: "52px", height: "52px", borderRadius: "10px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: `${scoreColor(analysis.match_score)}15`, border: `1px solid ${scoreColor(analysis.match_score)}40` }}>
-                  <span className="font-display" style={{ fontSize: "1.25rem", color: scoreColor(analysis.match_score), fontWeight: 300 }}>
-                    {analysis.match_score}
-                  </span>
-                </div>
-
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {analysis.resume_filename}
-                  </p>
-                  <p style={{ fontSize: "0.8rem", color: "var(--text-dim)", marginTop: "0.2rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {analysis.summary?.slice(0, 80)}...
-                  </p>
-                  <p style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginTop: "0.3rem" }}>
-                    {new Date(analysis.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                  </p>
-                </div>
-
-                <button
-                  onClick={(e) => handleDelete(analysis.id, e)}
-                  style={{ fontSize: "0.75rem", padding: "0.4rem 0.75rem", background: "transparent", color: "var(--text-dim)", border: "1px solid transparent", borderRadius: "6px", cursor: "pointer", flexShrink: 0, fontFamily: "DM Sans, sans-serif" }}
-                  onMouseEnter={e => { e.currentTarget.style.color = "var(--red)"; e.currentTarget.style.background = "var(--red-dim)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = "var(--text-dim)"; e.currentTarget.style.background = "transparent"; }}
+          <div className="flex flex-col gap-3">
+            {analyses.map((analysis) => {
+              const colors = scoreColor(analysis.match_score);
+              return (
+                <div
+                  key={analysis.id}
+                  onClick={() => router.push(`/results/${analysis.id}`)}
+                  className="bg-zinc-900 border border-zinc-800 rounded-xl px-6 py-5 flex items-center gap-5 cursor-pointer hover:border-gold/30 transition-colors"
                 >
-                  Delete
-                </button>
-              </div>
-            ))}
+                  <div className={`w-13 h-13 rounded-xl shrink-0 flex items-center justify-center ${colors.bg} border ${colors.border}`}
+                    style={{ width: "52px", height: "52px" }}>
+                    <span className={`font-display text-xl font-light ${colors.text}`}>
+                      {analysis.match_score}
+                    </span>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-stone-200 truncate">
+                      {analysis.resume_filename}
+                    </p>
+                    <p className="text-xs text-zinc-500 mt-0.5 truncate">
+                      {analysis.summary?.slice(0, 80)}...
+                    </p>
+                    <p className="text-xs text-zinc-600 mt-1">
+                      {new Date(analysis.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={(e) => handleDelete(analysis.id, e)}
+                    className="text-xs px-3 py-1.5 bg-transparent text-zinc-600 border border-transparent rounded-md cursor-pointer shrink-0 hover:text-red-400 hover:bg-red-950/50 hover:border-red-900/50 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
