@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { login as loginApi, signup as signupApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/error";
 
-export default function AuthPage() {
+function AuthPageInner() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -121,7 +121,7 @@ export default function AuthPage() {
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Full name"
+                  placeholder="Jonathan Whittaker"
                   className="w-full rounded-lg px-4 py-3 text-sm outline-none transition-colors"
                   style={{background:"var(--bg)", border:"1px solid var(--border-light)", color:"var(--text)"}}
                 />
@@ -192,5 +192,13 @@ export default function AuthPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense>
+      <AuthPageInner />
+    </Suspense>
   );
 }
