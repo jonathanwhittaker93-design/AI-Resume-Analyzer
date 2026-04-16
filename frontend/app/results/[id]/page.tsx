@@ -164,3 +164,7 @@ export default function ResultsPage() {
     </main>
   );
 }
+
+export function generateStaticParams() {
+  return [];
+}
