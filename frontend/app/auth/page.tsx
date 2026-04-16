@@ -79,7 +79,7 @@ function AuthPageInner() {
           </div>
 
           <button
-            onClick={() => router.replace("/auth")}
+            onClick={() => { setAwaitingConfirmation(false); setConfirmedEmail(""); router.replace("/auth"); }}
             className="mt-6 bg-transparent border-none cursor-pointer text-sm transition-colors"
             style={{color:"var(--gold)"}}
             onMouseEnter={e => (e.currentTarget.style.color = "var(--gold-light)")}
@@ -121,7 +121,7 @@ function AuthPageInner() {
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Joe Bloggs"
+                  placeholder="John Doe"
                   className="w-full rounded-lg px-4 py-3 text-sm outline-none transition-colors"
                   style={{background:"var(--bg)", border:"1px solid var(--border-light)", color:"var(--text)"}}
                 />
@@ -135,7 +135,7 @@ function AuthPageInner() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="you@example.com"
+                placeholder="johndoe@example.com"
                 className="w-full rounded-lg px-4 py-3 text-sm outline-none transition-colors"
                 style={{background:"var(--bg)", border:"1px solid var(--border-light)", color:"var(--text)"}}
               />
