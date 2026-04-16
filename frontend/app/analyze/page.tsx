@@ -117,7 +117,7 @@ export default function AnalyzePage() {
               {file ? (
                 <div>
                   <p className="text-sm font-normal mb-1" style={{color:"var(--gold)"}}>{file.name}</p>
-                  <p className="text-xs" style={{color:"var(--text-dim)"}}>{(file.size / 1024 / 1024).toFixed(2)} MB — click to change</p>
+                  <p className="text-xs" style={{color:"var(--text-dim)"}}>{(file.size / 1024 / 1024).toFixed(2)} MB click to change</p>
                 </div>
               ) : (
                 <div>
