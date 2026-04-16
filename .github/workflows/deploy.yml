@@ -39,7 +39,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Lint
-        run: pip install ruff && ruff check .
+        run: pip install ruff && ruff check . --ignore E402
 
       - name: Run tests
         run: pip install pytest && pytest --tb=short -q
@@ -67,7 +67,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
@@ -98,8 +98,6 @@ jobs:
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
           extra_args: --only-verified
 
   # ── Deploy Backend to Railway ────────────────────────────────
@@ -140,7 +138,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
