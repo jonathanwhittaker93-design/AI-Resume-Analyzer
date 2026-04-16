@@ -28,7 +28,7 @@ export default function ResultsPage() {
       .then((res) => setAnalysis(res.data))
       .catch(() => router.push("/dashboard"))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, router]);
 
   if (loading) return (
     <main style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -59,7 +59,6 @@ export default function ResultsPage() {
     <main style={{ minHeight: "100vh", background: "var(--bg)", padding: "2.5rem 1.5rem" }}>
       <div style={{ maxWidth: "680px", margin: "0 auto" }}>
 
-        {/* Nav */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "3rem" }}>
           <div>
             <span className="font-display" style={{ fontSize: "1.4rem", color: "var(--gold)" }}>Resumé</span>
@@ -85,7 +84,6 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* Page title */}
         <h1 className="font-display" style={{ fontSize: "2.75rem", fontWeight: 300, color: "var(--text)", marginBottom: "0.35rem" }}>
           Analysis Results
         </h1>
@@ -93,7 +91,6 @@ export default function ResultsPage() {
           {analysis.resume_filename} analyzed on {new Date(analysis.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
         </p>
 
-        {/* Score */}
         {section("Match Score", scoreLabel, (
           <div style={{ padding: "1.75rem" }}>
             <div style={{ display: "flex", alignItems: "flex-end", gap: "1.25rem", marginBottom: "1.5rem" }}>
@@ -113,7 +110,6 @@ export default function ResultsPage() {
           </div>
         ))}
 
-        {/* Strengths */}
         {section("Strengths", `${analysis.strengths.length} identified`, (
           <div>
             {analysis.strengths.map((s, i) => (
@@ -125,7 +121,6 @@ export default function ResultsPage() {
           </div>
         ))}
 
-        {/* Missing Keywords */}
         {section("Missing Keywords", "Add these to your resume", (
           <div style={{ padding: "1.5rem 1.75rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
             {analysis.missing_keywords.map((kw, i) => (
@@ -136,7 +131,6 @@ export default function ResultsPage() {
           </div>
         ))}
 
-        {/* Suggestions */}
         {section("Suggestions", "How to improve", (
           <div>
             {analysis.suggestions.map((s, i) => (
@@ -148,7 +142,6 @@ export default function ResultsPage() {
           </div>
         ))}
 
-        {/* CTA */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginTop: "0.5rem" }}>
           <button
             onClick={() => router.push("/analyze")}

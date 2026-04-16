@@ -25,8 +25,9 @@ export default function AuthPage() {
         : await signupApi(email, password, fullName);
       login(res.data.access_token);
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.response?.data?.detail || "Something went wrong.");
+    } catch (err: unknown) {
+      const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      setError(detail || "Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -36,7 +37,6 @@ export default function AuthPage() {
     <main style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
       <div style={{ width: "100%", maxWidth: "400px" }}>
 
-        {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
           <span
             className="font-display"
@@ -50,7 +50,6 @@ export default function AuthPage() {
           </p>
         </div>
 
-        {/* Card */}
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "16px", padding: "2rem" }}>
           <form onSubmit={handleSubmit}>
 
@@ -113,7 +112,6 @@ export default function AuthPage() {
           </form>
         </div>
 
-        {/* Toggle */}
         <p style={{ textAlign: "center", marginTop: "1.5rem", fontSize: "0.875rem", color: "var(--text-dim)" }}>
           {isLogin ? "No account yet?" : "Already have an account?"}{" "}
           <button

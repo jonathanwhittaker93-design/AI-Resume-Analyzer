@@ -24,7 +24,7 @@ export default function DashboardPage() {
       .then((res) => setAnalyses(res.data))
       .catch(() => router.push("/auth"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [router]);
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -39,7 +39,6 @@ export default function DashboardPage() {
     <main style={{ minHeight: "100vh", background: "var(--bg)", padding: "2.5rem 1.5rem" }}>
       <div style={{ maxWidth: "680px", margin: "0 auto" }}>
 
-        {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "3rem" }}>
           <div>
             <span className="font-display" style={{ fontSize: "1.4rem", color: "var(--gold)" }}>Resumé</span>
@@ -86,14 +85,12 @@ export default function DashboardPage() {
                 onClick={() => router.push(`/results/${analysis.id}`)}
                 style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1.25rem 1.5rem", display: "flex", alignItems: "center", gap: "1.25rem", cursor: "pointer" }}
               >
-                {/* Score bubble */}
                 <div style={{ width: "52px", height: "52px", borderRadius: "10px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: `${scoreColor(analysis.match_score)}15`, border: `1px solid ${scoreColor(analysis.match_score)}40` }}>
                   <span className="font-display" style={{ fontSize: "1.25rem", color: scoreColor(analysis.match_score), fontWeight: 300 }}>
                     {analysis.match_score}
                   </span>
                 </div>
 
-                {/* Info */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {analysis.resume_filename}
@@ -106,7 +103,6 @@ export default function DashboardPage() {
                   </p>
                 </div>
 
-                {/* Delete */}
                 <button
                   onClick={(e) => handleDelete(analysis.id, e)}
                   style={{ fontSize: "0.75rem", padding: "0.4rem 0.75rem", background: "transparent", color: "var(--text-dim)", border: "1px solid transparent", borderRadius: "6px", cursor: "pointer", flexShrink: 0, fontFamily: "DM Sans, sans-serif" }}

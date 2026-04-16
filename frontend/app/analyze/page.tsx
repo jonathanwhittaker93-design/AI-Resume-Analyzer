@@ -12,7 +12,7 @@ export default function AnalyzePage() {
   const [step, setStep] = useState("");
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,8 +27,9 @@ export default function AnalyzePage() {
       setStep("Analyzing with Claude...");
       const analyzeRes = await analyzeResume(storage_path, filename, jobDescription);
       router.push(`/results/${analyzeRes.data.id}`);
-    } catch (err: any) {
-      setError(err.response?.data?.detail || "Something went wrong.");
+    } catch (err: unknown) {
+      const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      setError(detail || "Something went wrong.");
       setLoading(false);
       setStep("");
     }
@@ -47,33 +48,31 @@ export default function AnalyzePage() {
     <main style={{ minHeight: "100vh", background: "var(--bg)", padding: "2.5rem 1.5rem" }}>
       <div style={{ maxWidth: "680px", margin: "0 auto" }}>
 
-        {/* Nav */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "3rem" }}>
           <div>
             <span className="font-display" style={{ fontSize: "1.4rem", color: "var(--gold)" }}>Resumé</span>
             <p style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginTop: "0.25rem" }}>{user?.email}</p>
           </div>
-            <div style={{ display: "flex", gap: "0.75rem" }}>
+          <div style={{ display: "flex", gap: "0.75rem" }}>
             <button
-                onClick={() => router.push("/dashboard")}
-                style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500, fontFamily: "DM Sans, sans-serif" }}
-                onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-light)")}
-                onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}
+              onClick={() => router.push("/dashboard")}
+              style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500, fontFamily: "DM Sans, sans-serif" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-light)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}
             >
-                Dashboard
+              Dashboard
             </button>
             <button
-                onClick={() => { logout(); router.push("/auth"); }}
-                style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "transparent", color: "var(--text-dim)", border: "1px solid var(--border)", borderRadius: "8px", cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "var(--text-muted)")}
-                onMouseLeave={e => (e.currentTarget.style.color = "var(--text-dim)")}
+              onClick={() => { logout(); router.push("/auth"); }}
+              style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "transparent", color: "var(--text-dim)", border: "1px solid var(--border)", borderRadius: "8px", cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--text-muted)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "var(--text-dim)")}
             >
-                Sign out
+              Sign out
             </button>
-            </div>
+          </div>
         </div>
 
-        {/* Title */}
         <h1 className="font-display" style={{ fontSize: "2.75rem", fontWeight: 300, color: "var(--text)", marginBottom: "0.5rem" }}>
           New Analysis
         </h1>
@@ -83,7 +82,6 @@ export default function AnalyzePage() {
 
         <form onSubmit={handleSubmit}>
 
-          {/* Upload */}
           <div style={{ background: "var(--surface)", border: `1px solid ${dragOver ? "var(--gold)" : file ? "rgba(200,169,110,0.4)" : "var(--border)"}`, borderRadius: "16px", marginBottom: "1rem", overflow: "hidden" }}>
             <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--border)" }}>
               <p style={{ fontSize: "0.65rem", color: "var(--gold)", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500 }}>Resume</p>
@@ -104,13 +102,12 @@ export default function AnalyzePage() {
               ) : (
                 <div>
                   <p style={{ fontSize: "0.925rem", color: "var(--text-muted)", marginBottom: "0.35rem", fontWeight: 300 }}>Drop your PDF here</p>
-                  <p style={{ fontSize: "0.75rem", color: "var(--text-dim)" }}>or click to browse maximum file size 5MB</p>
+                  <p style={{ fontSize: "0.75rem", color: "var(--text-dim)" }}>or click to browse — maximum file size 5MB</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Job description */}
           <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "16px", marginBottom: "1.5rem", overflow: "hidden" }}>
             <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--border)" }}>
               <p style={{ fontSize: "0.65rem", color: "var(--gold)", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500 }}>Job Description</p>
