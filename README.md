@@ -126,7 +126,7 @@ Every push to `main` runs:
 - TypeScript/ESLint checks
 - Secret scanning (TruffleHog)
 
-Deployments are handled automatically — Vercel for the frontend, Railway for the backend.
+Deployments are handled automatically, Vercel for the frontend, Railway for the backend.
 
 ## License
 
