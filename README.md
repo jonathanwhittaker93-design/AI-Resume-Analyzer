@@ -6,12 +6,12 @@ An AI-powered resume analysis tool that scores your resume against any job descr
 
 ## Features
 
-- **Resume scoring** — get a 0–100 match score against any job description
-- **Strengths analysis** — see exactly what's working in your resume
-- **Missing keywords** — find the gaps between your resume and the role
-- **Actionable suggestions** — specific improvements to boost your score
-- **Analysis history** — track your progress over multiple applications
-- **Secure auth** — email/password authentication with JWT tokens
+- **Resume scoring**: get a 0–100 match score against any job description
+- **Strengths analysis**: see exactly what's working in your resume
+- **Missing keywords**: find the gaps between your resume and the role
+- **Actionable suggestions**: specific improvements to boost your score
+- **Analysis history**: track your progress over multiple applications
+- **Secure auth**: email/password authentication with JWT tokens
 
 ## Tech Stack
 
