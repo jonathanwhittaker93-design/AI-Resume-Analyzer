@@ -8,8 +8,8 @@ export default function HomePage() {
   const { token, loading, user } = useAuth();
 
   const renderNav = () => {
-    if (loading) return <div className="w-44 h-9" />;
-    if (token) return (
+    if (loading || (token && !user)) return <div className="w-44 h-9" />;
+    if (token && user) return (
       <div className="flex items-center gap-3">
         <p className="text-xs" style={{color:"var(--text-dim)"}}>{user?.email}</p>
         <button
