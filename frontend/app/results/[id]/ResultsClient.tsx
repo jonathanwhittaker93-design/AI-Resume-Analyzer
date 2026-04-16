@@ -31,8 +31,8 @@ export default function ResultsClient() {
   }, [id, router]);
 
   if (loading) return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>Loading results...</p>
+    <main className="min-h-screen flex items-center justify-center" style={{background:"var(--bg)"}}>
+      <p className="text-sm" style={{color:"var(--text-muted)"}}>Loading results...</p>
     </main>
   );
 
@@ -46,28 +46,30 @@ export default function ResultsClient() {
     analysis.match_score >= 40 ? "Partial Match" : "Weak Match";
 
   const section = (label: string, hint: string, children: React.ReactNode) => (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "16px", marginBottom: "1rem", overflow: "hidden" }}>
-      <div style={{ padding: "1.25rem 1.75rem", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <p style={{ fontSize: "0.65rem", color: "var(--gold)", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500 }}>{label}</p>
-        <p style={{ fontSize: "0.7rem", color: "var(--text-dim)" }}>{hint}</p>
+    <div className="rounded-2xl mb-4 overflow-hidden" style={{background:"var(--surface)", border:"1px solid var(--border)"}}>
+      <div className="px-7 py-5 flex items-center justify-between" style={{borderBottom:"1px solid var(--border)"}}>
+        <p className="text-xs font-medium tracking-widest uppercase" style={{color:"var(--gold)"}}>{label}</p>
+        <p className="text-xs" style={{color:"var(--text-dim)"}}>{hint}</p>
       </div>
       {children}
     </div>
   );
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--bg)", padding: "2.5rem 1.5rem" }}>
-      <div style={{ maxWidth: "680px", margin: "0 auto" }}>
+    <main className="min-h-screen py-10 px-6" style={{background:"var(--bg)"}}>
+      <div className="max-w-2xl mx-auto">
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "3rem" }}>
+        {/* Nav */}
+        <div className="flex items-center justify-between mb-12">
           <div>
-            <span className="font-display" style={{ fontSize: "1.4rem", color: "var(--gold)" }}>Resumé</span>
-            <p style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginTop: "0.25rem" }}>{user?.email}</p>
+            <span className="font-display text-xl" style={{color:"var(--gold)"}}>Resumé</span>
+            <p className="text-xs mt-1" style={{color:"var(--text-dim)"}}>{user?.email}</p>
           </div>
-          <div style={{ display: "flex", gap: "0.75rem" }}>
+          <div className="flex gap-3">
             <button
               onClick={() => router.push("/analyze")}
-              style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 500, fontFamily: "DM Sans, sans-serif" }}
+              className="text-sm px-5 py-2 rounded-lg font-medium cursor-pointer transition-colors"
+              style={{background:"var(--gold)", color:"#0a0808", border:"none"}}
               onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-light)")}
               onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}
             >
@@ -75,7 +77,8 @@ export default function ResultsClient() {
             </button>
             <button
               onClick={() => router.push("/dashboard")}
-              style={{ fontSize: "0.875rem", padding: "0.6rem 1.25rem", background: "transparent", color: "var(--text-dim)", border: "1px solid var(--border)", borderRadius: "8px", cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}
+              className="text-sm px-5 py-2 rounded-lg cursor-pointer transition-colors"
+              style={{background:"transparent", color:"var(--text-dim)", border:"1px solid var(--border)"}}
               onMouseEnter={e => (e.currentTarget.style.color = "var(--text-muted)")}
               onMouseLeave={e => (e.currentTarget.style.color = "var(--text-dim)")}
             >
@@ -84,47 +87,59 @@ export default function ResultsClient() {
           </div>
         </div>
 
-        <h1 className="font-display" style={{ fontSize: "2.75rem", fontWeight: 300, color: "var(--text)", marginBottom: "0.35rem" }}>
+        <h1 className="font-display font-light mb-1" style={{fontSize:"2.75rem", color:"var(--text)"}}>
           Analysis Results
         </h1>
-        <p style={{ fontSize: "0.75rem", color: "var(--text-dim)", marginBottom: "2.5rem" }}>
+        <p className="text-xs mb-10" style={{color:"var(--text-dim)"}}>
           {analysis.resume_filename} analyzed on {new Date(analysis.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
         </p>
 
         {section("Match Score", scoreLabel, (
-          <div style={{ padding: "1.75rem" }}>
-            <div style={{ display: "flex", alignItems: "flex-end", gap: "1.25rem", marginBottom: "1.5rem" }}>
-              <span className="font-display" style={{ fontSize: "5rem", lineHeight: 1, fontWeight: 300, color: scoreColor }}>
+          <div className="p-7">
+            <div className="flex items-end gap-5 mb-6">
+              <span className="font-display font-light" style={{fontSize:"5rem", lineHeight:1, color:scoreColor}}>
                 {analysis.match_score}
               </span>
-              <div style={{ paddingBottom: "0.5rem" }}>
-                <p style={{ fontSize: "0.65rem", color: "var(--text-dim)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.35rem" }}>out of 100</p>
-                <div style={{ display: "flex", gap: "3px" }}>
+              <div className="pb-2">
+                <p className="text-xs tracking-widest uppercase mb-1.5" style={{color:"var(--text-dim)"}}>out of 100</p>
+                <div className="flex gap-0.5">
                   {Array.from({ length: 10 }).map((_, i) => (
-                    <div key={i} style={{ width: "20px", height: "3px", borderRadius: "2px", background: i < Math.round(analysis.match_score / 10) ? scoreColor : "var(--border-light)" }} />
+                    <div
+                      key={i}
+                      className="h-0.5 w-5 rounded-sm"
+                      style={{background: i < Math.round(analysis.match_score / 10) ? scoreColor : "var(--border-light)"}}
+                    />
                   ))}
                 </div>
               </div>
             </div>
-            <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", lineHeight: 1.75, fontWeight: 300 }}>{analysis.summary}</p>
+            <p className="text-sm font-light leading-relaxed" style={{color:"var(--text-muted)"}}>{analysis.summary}</p>
           </div>
         ))}
 
         {section("Strengths", `${analysis.strengths.length} identified`, (
           <div>
             {analysis.strengths.map((s, i) => (
-              <div key={i} style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start", padding: "1.1rem 1.75rem", borderBottom: i < analysis.strengths.length - 1 ? "1px solid var(--border)" : "none" }}>
-                <span className="font-display" style={{ fontSize: "1.25rem", color: "var(--gold)", opacity: 0.35, flexShrink: 0, lineHeight: 1, minWidth: "1.25rem", textAlign: "right", paddingTop: "2px" }}>{i + 1}</span>
-                <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", fontWeight: 300, lineHeight: 1.7 }}>{s}</p>
+              <div
+                key={i}
+                className="flex gap-6 items-start px-7 py-4"
+                style={{borderBottom: i < analysis.strengths.length - 1 ? "1px solid var(--border)" : "none"}}
+              >
+                <span className="font-display text-xl shrink-0 leading-none pt-0.5" style={{color:"var(--gold)", opacity:0.35, minWidth:"1.25rem", textAlign:"right"}}>{i + 1}</span>
+                <p className="text-sm font-light leading-relaxed" style={{color:"var(--text-muted)"}}>{s}</p>
               </div>
             ))}
           </div>
         ))}
 
         {section("Missing Keywords", "Add these to your resume", (
-          <div style={{ padding: "1.5rem 1.75rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+          <div className="px-7 py-6 flex flex-wrap gap-2">
             {analysis.missing_keywords.map((kw, i) => (
-              <span key={i} style={{ fontSize: "0.825rem", padding: "0.45rem 1rem", background: "rgba(200,169,110,0.07)", color: "var(--gold)", borderRadius: "8px", border: "1px solid rgba(200,169,110,0.18)", fontWeight: 300 }}>
+              <span
+                key={i}
+                className="text-sm px-4 py-1.5 rounded-lg font-light"
+                style={{background:"rgba(200,169,110,0.07)", color:"var(--gold)", border:"1px solid rgba(200,169,110,0.18)"}}
+              >
                 {kw}
               </span>
             ))}
@@ -134,18 +149,23 @@ export default function ResultsClient() {
         {section("Suggestions", "How to improve", (
           <div>
             {analysis.suggestions.map((s, i) => (
-              <div key={i} style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start", padding: "1.1rem 1.75rem", borderBottom: i < analysis.suggestions.length - 1 ? "1px solid var(--border)" : "none" }}>
-                <span className="font-display" style={{ fontSize: "1.25rem", color: "var(--gold)", opacity: 0.35, flexShrink: 0, lineHeight: 1, minWidth: "1.25rem", textAlign: "right", paddingTop: "2px" }}>{i + 1}</span>
-                <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", fontWeight: 300, lineHeight: 1.7 }}>{s}</p>
+              <div
+                key={i}
+                className="flex gap-6 items-start px-7 py-4"
+                style={{borderBottom: i < analysis.suggestions.length - 1 ? "1px solid var(--border)" : "none"}}
+              >
+                <span className="font-display text-xl shrink-0 leading-none pt-0.5" style={{color:"var(--gold)", opacity:0.35, minWidth:"1.25rem", textAlign:"right"}}>{i + 1}</span>
+                <p className="text-sm font-light leading-relaxed" style={{color:"var(--text-muted)"}}>{s}</p>
               </div>
             ))}
           </div>
         ))}
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginTop: "0.5rem" }}>
+        <div className="grid grid-cols-2 gap-3 mt-2">
           <button
             onClick={() => router.push("/analyze")}
-            style={{ padding: "1rem", background: "var(--gold)", color: "#0a0808", border: "none", borderRadius: "12px", fontSize: "0.875rem", fontWeight: 500, cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}
+            className="py-4 rounded-xl text-sm font-medium cursor-pointer transition-colors"
+            style={{background:"var(--gold)", color:"#0a0808", border:"none"}}
             onMouseEnter={e => (e.currentTarget.style.background = "var(--gold-light)")}
             onMouseLeave={e => (e.currentTarget.style.background = "var(--gold)")}
           >
@@ -153,7 +173,8 @@ export default function ResultsClient() {
           </button>
           <button
             onClick={() => router.push("/dashboard")}
-            style={{ padding: "1rem", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border-light)", borderRadius: "12px", fontSize: "0.875rem", cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}
+            className="py-4 rounded-xl text-sm cursor-pointer transition-colors"
+            style={{background:"transparent", color:"var(--text-muted)", border:"1px solid var(--border-light)"}}
             onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(200,169,110,0.3)")}
             onMouseLeave={e => (e.currentTarget.style.borderColor = "var(--border-light)")}
           >
@@ -164,4 +185,8 @@ export default function ResultsClient() {
       </div>
     </main>
   );
+}
+
+export function generateStaticParams() {
+  return [];
 }
